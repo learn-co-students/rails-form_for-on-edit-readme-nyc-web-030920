@@ -13,19 +13,26 @@ class PostsController < ApplicationController
 
 	def create
 	  @post = Post.new
-	  @post.title = params[:title]
-	  @post.description = params[:description]
-	  @post.save
+	  @post.create(post_params)
 	  redirect_to post_path(@post)
 	end
 
-	def edit
+	def create
+		@post = Post.new
+		@post.title = params[:title]
+		@post.description = params[:description]
+		@post.save
+		redirect_to post_path(@post)
+	  end
+  
+	  def edit
+		  @post = Post.find(params[:id])
+	  end
+  
+	  def update
 		@post = Post.find(params[:id])
-	end
-
-	def update
-	  @post = Post.find(params[:id])
-	  @post.update(title: params[:title], description: params[:description])
-	  redirect_to post_path(@post)
-	end
+		@post.update(params.require(:post).permit(:title, :description))
+		#.require excapsulates title and description within a post hash
+		redirect_to post_path(@post)
+	  end
 end
